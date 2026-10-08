@@ -1,0 +1,10 @@
+{
+  "description": "Control and monitor smart home devices remotely with an intuitive interface designed for seamless home automation and enhanced convenience.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
