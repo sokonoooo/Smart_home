@@ -5,12 +5,99 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><!-- figma:title --></title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet" />
+
+    <script>
+      // Apply the saved theme before the page paints, so dark mode doesn't flash white.
+      try {
+        var saved = localStorage.getItem("haven-theme");
+        try { saved = JSON.parse(saved); } catch (e) {}
+        var dark = saved === "dark" || ((!saved || saved === "system") && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+      } catch (e) {}
+    </script>
     <!-- figma:head-end -->
   </head>
   <body>
     <!-- figma:body-start -->
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+
+    <!--
+      The frame of the app (sidebar, top bar, mobile nav) is plain HTML.
+      Each page's content is drawn by JavaScript into <div id="page">.
+      <span data-icon="name"> placeholders are filled with SVG icons by JS.
+      Buttons with data-page="..." switch pages; data-action="..." runs an action.
+    -->
+    <aside class="sidebar">
+      <span class="brand"><span class="brand__mark" data-icon="home"></span>Haven</span>
+
+      <nav class="sidebar__nav" aria-label="Primary navigation">
+        <button class="nav-item" data-page="home"><span data-icon="home"></span>Home</button>
+        <button class="nav-item" data-page="assistant"><span data-icon="sparkles"></span>Assistant</button>
+        <button class="nav-item" data-page="automations"><span data-icon="clock"></span>Automations</button>
+        <button class="nav-item" data-page="energy"><span data-icon="bolt"></span>Energy</button>
+        <button class="nav-item" data-page="security"><span data-icon="shield"></span>Security</button>
+      </nav>
+
+      <div class="sidebar__spacer"></div>
+
+      <div class="sidebar__status">
+        <span class="status-dot"></span>
+        <div class="stack-text">
+          <strong>Home is online</strong>
+          <small id="connected-count">11 devices connected</small>
+        </div>
+      </div>
+
+      <button class="nav-item" data-page="design-system"><span data-icon="palette"></span>Design system</button>
+      <button class="nav-item" data-page="settings"><span data-icon="settings"></span>Settings</button>
+
+      <div class="sidebar__profile">
+        <span class="avatar">AJ</span>
+        <div class="stack-text">
+          <strong>Alex Johnson</strong>
+          <small>Home owner</small>
+        </div>
+        <span data-icon="more"></span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <span class="brand topbar__brand"><span class="brand__mark" data-icon="home"></span>Haven</span>
+
+        <form id="topbar-search" class="field topbar__search">
+          <span data-icon="search"></span>
+          <input class="field__input" name="query" aria-label="Ask Haven anything" placeholder="Ask Haven anything…" autocomplete="off" />
+        </form>
+
+        <div class="topbar__actions">
+          <span class="topbar__weather"><span data-icon="sun"></span>18° <small>Clear</small></span>
+          <button class="icon-btn" data-action="toggle-theme" id="theme-button" aria-label="Switch theme"></button>
+          <button class="icon-btn topbar__bell" data-action="notifications" aria-label="Notifications">
+            <span data-icon="bell"></span><span class="icon-btn__dot"></span>
+          </button>
+          <button class="avatar topbar__avatar" data-page="settings" aria-label="Open settings">AJ</button>
+        </div>
+      </header>
+
+      <div class="content" id="page"></div>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <button class="mobile-nav__item" data-page="home"><span data-icon="home"></span>Home</button>
+      <button class="mobile-nav__item" data-page="assistant"><span data-icon="sparkles"></span>Ask</button>
+      <button class="mobile-nav__item" data-page="automations"><span data-icon="clock"></span>Routines</button>
+      <button class="mobile-nav__item" data-page="energy"><span data-icon="bolt"></span>Energy</button>
+      <button class="mobile-nav__item" data-page="security"><span data-icon="shield"></span>Security</button>
+    </nav>
+
+    <div class="toast" id="toast" role="status" hidden></div>
+
+    <script type="module" src="/src/main.js"></script>
     <!-- figma:body-end -->
   </body>
 </html>
